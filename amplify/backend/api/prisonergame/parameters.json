@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "prisonergame",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authprisonergame5bc2a331",
+      "Outputs.UserPoolId"
+    ]
+  }
+}
