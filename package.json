@@ -9,13 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-amplify/ui-react": "^3.5.4",
     "@reduxjs/toolkit": "^1.8.5",
+    "appsync-client": "^2.15.0",
     "aws-amplify": "^4.3.37",
+    "graphql-tag": "^2.12.6",
+    "net": "^1.0.2",
     "next": "12.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-redux": "^8.0.4",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "websocket": "^1.0.34"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.12",
