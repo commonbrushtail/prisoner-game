@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-  isloading: false,
+  isLoading: true,
 };
 
 export const userSlice = createSlice({
@@ -8,6 +8,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     updateIsLoading: (state, action) => {
+      console.log(state);
       state.isLoading = action.payload;
     },
   },
