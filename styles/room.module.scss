@@ -1,0 +1,41 @@
+.playerCard {
+  @apply w-[60px] h-[80px] transition-all border-black border-2 rounded-md flex 
+                items-center justify-center cursor-pointer duration-300;
+}
+
+.flipCard {
+  width: 60px;
+  height: 80px;
+
+  @apply bg-transparent;
+}
+
+.flipCardInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.flipCardFront,
+.flipCardBack {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  @apply border-2 border-black rounded-lg;
+}
+
+.flipCardFront {
+  @apply bg-yellow-300;
+  color: black;
+}
+
+.flipCardBack {
+  @apply bg-yellow-300;
+
+  transform: rotateY(180deg);
+}

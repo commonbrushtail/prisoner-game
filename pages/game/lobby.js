@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { generateRoomKey, createRoom, updateOnlineUser, updateRoomData } from "../../utils/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { updateIsLoading } from "../../store/loading/loading.slice";
-import { updateIsHosting, updateHostingRoomId } from "../../store/user/user.slice";
+import { updateIsHosting, updateUserRoomId } from "../../store/user/user.slice";
 import { useRouter } from "next/router";
 import RoomList from "../../components/RoomList/RoomList.component";
 
@@ -60,7 +60,7 @@ const Lobby = () => {
       },
     };
     updateOnlineUser(userUid, updateObject);
-    dispatch(updateHostingRoomId(roomId));
+    dispatch(updateUserRoomId(roomId));
     dispatch(updateIsHosting(true));
 
     router.push("room");
@@ -82,6 +82,8 @@ const Lobby = () => {
     const roomData = {
       guestEmail: userEmail,
       guestUid: userUid,
+      roomState: "guest joined",
+      guestState: "not ready",
     };
     updateRoomData(selectedRoomId, roomData);
     const userData = {
@@ -92,7 +94,9 @@ const Lobby = () => {
         },
       },
     };
+
     updateOnlineUser(userUid, userData);
+    dispatch(updateUserRoomId(selectedRoomId));
     // the current user will be joining room as guest
 
     router.push("room");

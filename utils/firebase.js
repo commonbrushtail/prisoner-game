@@ -99,15 +99,46 @@ export const roomListRef = () => {
   return ref(realtimeDb, "rooms");
 };
 
-export const roomRef = (id) => {
-  return ref(realtimeDb, `rooms/${id}`);
+export const roomRef = (roomId) => {
+  return ref(realtimeDb, `rooms/${roomId}`);
 };
 export const generateRoomKey = () => {
   return push(roomListRef()).key;
 };
 
-export const createRoom = (updateRoomId, roomName, hostUid, hostEmail) => {
-  return set(roomRef(updateRoomId), { hostID: hostUid, hostEmail, roomName, createdTime: dbTimestamp(), roomState: "init" });
+export const chatRef = (roomId) => {
+  return ref(realtimeDb, `rooms/${roomId}/chat`);
+};
+export const msgRef = (roomId, msgId) => {
+  return ref(realtimeDb, `rooms/${roomId}/chat/${msgId}`);
+};
+
+export const createMsg = (roomId, msgId, msgObject) => {
+  return set(msgRef(roomId, msgId), msgObject);
+};
+
+export const generateMsgKey = (roomId) => {
+  return push(child(chatRef(roomId), "chat")).key;
+};
+
+export const createRoom = (roomId, roomName, hostUid, hostEmail) => {
+  return set(roomRef(roomId), {
+    hostID: hostUid,
+    hostEmail,
+    hostCountdown: "",
+    guestCountdown: "",
+    roomName,
+    createdTime: dbTimestamp(),
+    roomState: "init",
+    hostState: "not ready",
+    guestState: "not join",
+    hostScore: "",
+    guestScore: "",
+    roomRound: 0,
+    hostChoice: { round1: "", round2: "", round3: "" },
+    guestChoice: { round1: "", round2: "", round3: "" },
+    chat: {},
+  });
 };
 
 export const updateRoomData = (updateRoomId, data) => {
