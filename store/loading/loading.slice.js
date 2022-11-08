@@ -8,7 +8,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     updateIsLoading: (state, action) => {
-      console.log(state);
+      //console.log(state);
       state.isLoading = action.payload;
     },
   },

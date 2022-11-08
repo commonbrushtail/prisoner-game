@@ -12,7 +12,7 @@ const RoomList = ({ children, handleClick, className, selectedRoomId, handleSets
 
   const handleRoomClick = (roomId) => {
     handleSetselectedRoomId(roomId);
-    console.log(selectedRoomId);
+    //console.log(selectedRoomId);
   };
 
   return (
@@ -22,7 +22,7 @@ const RoomList = ({ children, handleClick, className, selectedRoomId, handleSets
         {roomListArray.map((room) => {
           // if there're already guest in the room, don't put in the array
           var size = Object.keys(room).length;
-          console.log(size);
+          // console.log(size);
 
           if (size < 5) {
             return;

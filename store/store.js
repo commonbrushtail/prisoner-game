@@ -11,5 +11,5 @@ export const store = configureStore({
     online: onlineReducer,
     roomList: roomListReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });

@@ -20,7 +20,7 @@ const GameLayout = ({ children }) => {
 
     onValue(connectedRef, (snap) => {
       if (snap.val() === true) {
-        console.log("connected");
+        //console.log("connected");
 
         addUserToOnlineList(user.uid, user.email);
       } else {
@@ -33,18 +33,18 @@ const GameLayout = ({ children }) => {
         const data = snapshot.val();
         dispatch(updateOnline(data));
       } else {
-        console.log("no data");
+        //console.log("no data");
       }
     });
     //watch for room list and update local state
     onValue(roomListRef(), (snapshot) => {
-      console.log(snapshot.val());
+      //console.log(snapshot.val());
       if (snapshot.val()) {
         const data = snapshot.val();
 
         dispatch(updateRoomList(data));
       } else {
-        console.log("no room list");
+        //console.log("no room list");
         dispatch(updateRoomList({}));
       }
     });
