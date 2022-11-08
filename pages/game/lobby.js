@@ -15,6 +15,7 @@ import stealLogo from "../../public/assets/images/steal.png";
 import splitLogo from "../../public/assets/images/share.png";
 import { remove } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import Image from "next/image";
 const Lobby = () => {
   const auth = getAuth();
   const router = useRouter();
@@ -180,15 +181,21 @@ const Lobby = () => {
 
         <div className="flex space-x-5 w-full  py-4 -mt-2 ">
           <div className="flex items-center space-x-1 ">
-            <img className="w-[25px]" src={winLogo.src} alt="" />
+            <div className="relative w-[25px] h-[25px]">
+              <Image layout="fill" alt="" src={winLogo.src} objectFit="contain" />
+            </div>
             <span className="text-xl">{userWin}</span>
           </div>
           <div className="flex items-center space-x-1 ">
-            <img className="w-[30px]" src={splitLogo.src} alt="" />
+            <div className="relative w-[35px] h-[35px]">
+              <Image layout="fill" alt="" e src={splitLogo.src} objectFit="contain" />
+            </div>
             <span className="text-xl">{userSplit}</span>
           </div>
           <div className="flex items-center space-x-1 ">
-            <img className="w-[25px]" src={stealLogo.src} alt="" />
+            <div className="relative w-[30px] h-[30px]">
+              <Image layout="fill" alt="" src={stealLogo.src} objectFit="contain" />
+            </div>
             <span className="text-xl">{userSteal}</span>
           </div>
         </div>
@@ -202,7 +209,7 @@ const Lobby = () => {
               onClick={() => {
                 handleJoinClick();
               }}
-              className={` px-3  border-black border-2 rounded-md transition-all duration-100 py-1  px-4 ${
+              className={` border-black border-2 rounded-md transition-all duration-100 py-1  px-6 ${
                 selectedRoomId ? "pointer-events-auto cursor-pointer opacity-100" : "pointer-events-none opacity-20 "
               } `}>
               Join

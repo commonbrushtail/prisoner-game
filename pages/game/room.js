@@ -21,10 +21,20 @@ const Room = () => {
   const userRoomId = useSelector((state) => state.user.userRoomId);
   const roomState = useSelector((state) => state.roomList.roomList[userRoomId].roomState);
   const roomRound = useSelector((state) => state.roomList.roomList[userRoomId].roomRound);
-  const playerState = isHosting ? useSelector((state) => state.roomList.roomList[userRoomId].hostState) : useSelector((state) => state.roomList.roomList[userRoomId].guestState);
-  const foeState = !isHosting ? useSelector((state) => state.roomList.roomList[userRoomId].hostState) : useSelector((state) => state.roomList.roomList[userRoomId].guestState);
-  const playerCountdownState = isHosting ? useSelector((state) => state.roomList.roomList[userRoomId].hostCountdown) : useSelector((state) => state.roomList.roomList[userRoomId].guestCountdown);
-  const guestCountdownState = !isHosting ? useSelector((state) => state.roomList.roomList[userRoomId].hostCountdown) : useSelector((state) => state.roomList.roomList[userRoomId].guestCountdown);
+  const playerState = useSelector((state) => {
+    return isHosting ? state.roomList.roomList[userRoomId].hostState : state.roomList.roomList[userRoomId].guestState;
+  });
+  const foeState = useSelector((state) => {
+    return !isHosting ? state.roomList.roomList[userRoomId].hostState : state.roomList.roomList[userRoomId].guestState;
+  });
+  const playerCountdownState = useSelector((state) => {
+    return isHosting ? state.roomList.roomList[userRoomId].hostCountdown : state.roomList.roomList[userRoomId].guestCountdown;
+  });
+
+  const guestCountdownState = useSelector((state) => {
+    return !isHosting ? state.roomList.roomList[userRoomId].hostCountdown : state.roomList.roomList[userRoomId].guestCountdown;
+  });
+
   const [timer, setTimer] = useState(null);
   const [choice, setChoice] = useState(null);
   const [roundResultMsg, setRoundResultMsg] = useState(null);
@@ -483,7 +493,7 @@ const Room = () => {
                     </div>
                   )}
                   {choice && confirmChoice && <div className="absolute -translate-y-[19vh] text-center w-full">You chose {confirmChoice}ing</div>}
-                  {!choice && !confirmChoice && <div className="absolute -translate-y-[19vh] text-center w-full">choose "Split" or "Steal"</div>}
+                  {!choice && !confirmChoice && <div className="absolute -translate-y-[19vh] text-center w-full">choose &quot;Split&quot; or &quot;Steal&quot;</div>}
                 </div>
 
                 <div className={`flex justify-between ${!choice && "space-x-4"}`}>
