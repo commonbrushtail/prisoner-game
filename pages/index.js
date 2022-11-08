@@ -6,7 +6,7 @@ import ContentContainer from "../components/ContentContainer/ContentContainer.co
 import Logo from "../components/Logo/Logo.component";
 import Button from "../components/Button/Button.component";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { signInWithGooglePopup, addUserToFirestore, checkUserExist } from "../utils/firebase";
+import { signInWithGooglePopup, addUserToFirestore, checkUserExist, getUserFirestore } from "../utils/firebase";
 import { useRouter } from "next/router";
 function Home() {
   const router = useRouter();
@@ -15,15 +15,17 @@ function Home() {
   const [isInit, setIsInit] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (isInit) {
         return;
       }
       if (user) {
         setIsInit(true);
         dispatch(updateIsLoading(false));
-        dispatch(updateUser({ uid: user.uid, email: user.email }));
-        router.push("/game/lobby");
+        getUserFirestore(user.uid).then((data) => {
+          dispatch(updateUser(data));
+          router.replace({ pathname: "/game/lobby" }, "/");
+        });
       } else {
         setIsInit(true);
         dispatch(updateIsLoading(false));
@@ -43,24 +45,27 @@ function Home() {
 
   const handleGoogleClick = async () => {
     signInWithGooglePopup()
-      .then((res) => {
+      .then(async (res) => {
         const user = res.user;
         const uid = res.user.uid;
         const email = res.user.email;
+        const userData = await getUserFirestore(uid);
 
-        (async () => {
-          const userExist = await checkUserExist(uid);
-          if (userExist) {
-            dispatch(updateUser(user));
-            router.push("/game");
-          } else {
-            console.log("no");
-            addUserToFirestore(uid, email).then((res) => {
-              dispatch(updateUser(user));
-              router.push("/game");
+        if (userData) {
+          dispatch(updateUser(userData));
+          router.replace({ pathname: "/game/lobby" }, "/");
+        } else {
+          console.log("asdpo");
+          addUserToFirestore(uid, email)
+            .then((res) => {
+              return getUserFirestore(user.uid);
+            })
+            .then((data) => {
+              console.log(data);
+              dispatch(updateUser(data));
+              router.replace({ pathname: "/game/lobby" }, "/");
             });
-          }
-        })();
+        }
       })
       .catch((err) => console.log(err));
   };

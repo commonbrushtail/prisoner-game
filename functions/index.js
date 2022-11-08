@@ -12,19 +12,17 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 const firestore = admin.firestore();
 
-exports.onUserStatusChanged = functions.database.ref("/status/{uid}/status").onUpdate(async (change, context) => {
-  // Get the data written to Realtime Database
+exports.onRoomClosing = functions
+  .region("asia-southeast1")
+  .database.ref("/rooms/{roomId}/")
+  .onUpdate((change, context) => {
+    //var roomId = context.params.roomId;
 
-  const uid = context.params.uid;
-  const userStatusFirestoreRef = firestore.doc(`users/${uid}`);
-
-  const eventStatus = change.after.val();
-
-  if (eventStatus === "offline") {
-    return userStatusFirestoreRef.set({ status: "offline" }, { merge: true });
-  }
-
-  console.log(eventStatus, "xxxevent-staus");
-  console.log(context.params.uid, "user uid context");
-  //   const userStatusFirestoreRef = firestore.doc(`status/${context.params.uid}`);
-});
+    if (Object.keys(change.after.val()).length < 5) {
+      var ref = change.after.ref;
+      return ref.remove();
+    } else if (change.after.val().roomClosing === true || (change.after.val().guestLeaving && change.after.val().hostLeaving)) {
+      var ref = change.after.ref;
+      return ref.remove();
+    }
+  });

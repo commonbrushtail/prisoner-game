@@ -18,29 +18,36 @@ const RoomList = ({ children, handleClick, className, selectedRoomId, handleSets
   return (
     <>
       <div className="font-mono">Rooms</div>
-      <div className="w-full border-2 border-black p-4 rounded-lg h-[250px] overflow-y-auto font-mono overflow-hidden ">
+      <div className="w-full border-2 border-black p-4 rounded-lg h-[250px] overflow-y-auto font-mono overflow-hidden space-y-3 ">
         {roomListArray.map((room) => {
           // if there're already guest in the room, don't put in the array
-          if (room.guestEmail) {
+          var size = Object.keys(room).length;
+          console.log(size);
+
+          if (size < 5) {
             return;
           } else {
-            return (
-              <div
-                onClick={() => {
-                  handleRoomClick(room.id);
-                }}
-                className="flex flex-col  px-2 rounded py-1 cursor-pointer relative border border-black  "
-                key={room.id}>
-                <div className="flex flex-col">
-                  <div className="text-xl">{room.roomName}</div>
-                  <div>Host: {room.hostEmail}</div>
-                </div>
+            if (room.guestEmail || room.roomClosing || room.hostLeaving) {
+              return;
+            } else {
+              return (
                 <div
-                  className={`absolute pointer-events-none left-0 top-0 rounded transition-all border border-black origin-center w-full h-full ${
-                    room.id === selectedRoomId ? "scale-x-[102%] scale-y-[120%]" : " "
-                  }`}></div>
-              </div>
-            );
+                  onClick={() => {
+                    handleRoomClick(room.id);
+                  }}
+                  className="flex flex-col  px-2 rounded py-1 cursor-pointer relative border border-black  "
+                  key={room.id}>
+                  <div className="flex flex-col">
+                    <div className="text-xl">{room.roomName}</div>
+                    <div>Host: {room.hostEmail}</div>
+                  </div>
+                  <div
+                    className={`absolute pointer-events-none left-0 top-0 rounded transition-all border border-black origin-center w-full h-full ${
+                      room.id === selectedRoomId ? "scale-x-[102%] scale-y-[120%]" : " "
+                    }`}></div>
+                </div>
+              );
+            }
           }
         })}
       </div>

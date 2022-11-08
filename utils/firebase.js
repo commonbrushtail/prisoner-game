@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc, collection, writeBatch, query, getDocs, where } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc, collection, updateDoc, writeBatch, query, getDocs, where } from "firebase/firestore";
 import { getDatabase, get, ref, set, serverTimestamp as dbTimestamp, onValue, onDisconnect, push, child, update, remove } from "firebase/database";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -33,18 +33,27 @@ export const usersDoc = collection(firestoreDb, "users");
 export const addUserToFirestore = async (uid, email) => {
   await setDoc(doc(usersDoc, uid), {
     email: email,
-    id: uid,
+    uid: uid,
+    split: 0,
+    steal: 0,
+    win: 0,
+    lose: 0,
   });
 };
 
-export const setStatusOnlineFirestore = async (uid, status) => {
-  await setDoc(
-    doc(usersDoc, uid),
-    {
-      status: status,
-    },
-    { merge: true }
-  );
+export const updateUserFirestore = async (uid, dataObject) => {
+  await setDoc(doc(usersDoc, uid), dataObject, { merge: true });
+};
+
+export const getUserFirestore = async (uid) => {
+  const userRef = doc(firestoreDb, "users", uid);
+  const userSnap = await getDoc(userRef);
+
+  if (userSnap.exists()) {
+    return userSnap.data();
+  } else {
+    return;
+  }
 };
 
 export const checkUserExist = async (uid) => {
@@ -126,19 +135,78 @@ export const createRoom = (roomId, roomName, hostUid, hostEmail) => {
     hostID: hostUid,
     hostEmail,
     hostCountdown: "",
-    guestCountdown: "",
-    roomName,
-    createdTime: dbTimestamp(),
-    roomState: "init",
-    hostState: "not ready",
-    guestState: "not join",
-    hostScore: "",
-    guestScore: "",
-    roomRound: 0,
+    hostInRoom: true,
     hostChoice: { round1: "", round2: "", round3: "" },
+    hostLeaving: false,
+    hostState: "not ready",
+    hostScore: 0,
+
+    guestEmail: "",
+    guestUid: "",
+    guestState: "not join",
+    guestScore: 0,
     guestChoice: { round1: "", round2: "", round3: "" },
+    guestCountdown: "",
+    guestInRoom: false,
+    guestLeaving: true,
+
     chat: {},
+    roomState: "init",
+    roomRound: 0,
+    roomName,
+    roomClosing: false,
+    createdTime: dbTimestamp(),
+    hostDisconnected: false,
+    guestDisconnected: false,
   });
+};
+
+export const resetRoomStateObject = () => {
+  return {
+    hostCountdown: "",
+    hostInRoom: true,
+    hostChoice: { round1: "", round2: "", round3: "" },
+    hostLeaving: false,
+    hostState: "not ready",
+    hostScore: 0,
+
+    guestEmail: "",
+    guestUid: "",
+    guestState: "not join",
+    guestScore: 0,
+    guestChoice: { round1: "", round2: "", round3: "" },
+    guestCountdown: "",
+    guestInRoom: false,
+    guestLeaving: true,
+
+    chat: {},
+    roomState: "init",
+    roomRound: 0,
+    roomClosing: false,
+    hostDisconnected: false,
+    guestDisconnected: false,
+  };
+};
+export const anotherRoundStateObject = () => {
+  return {
+    hostCountdown: "",
+    hostInRoom: true,
+    hostChoice: { round1: "", round2: "", round3: "" },
+    hostLeaving: false,
+    hostState: "not ready",
+    hostScore: 0,
+
+    guestState: "not ready",
+    guestScore: 0,
+    guestChoice: { round1: "", round2: "", round3: "" },
+    guestCountdown: "",
+    guestInRoom: true,
+    guestLeaving: false,
+
+    roomState: "guest joined",
+    roomRound: 0,
+    roomClosing: false,
+  };
 };
 
 export const updateRoomData = (updateRoomId, data) => {
@@ -147,4 +215,8 @@ export const updateRoomData = (updateRoomId, data) => {
 
 export const updateOnlineUser = (uid, userData) => {
   return update(onlineListUserRef(uid), userData);
+};
+
+export const deleteRoom = (roomId) => {
+  return set(roomRef(roomId), {});
 };
